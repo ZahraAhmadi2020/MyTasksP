@@ -1,14 +1,13 @@
 
-
 import WForm from './components/Sample1/WForm'
 
 
 
-function App({formData}) {
+function App() {
 
   return (
     <>
-      <WForm  />
+      <WForm/>
 
 
     </>

@@ -13,31 +13,15 @@ import Other from './Other';
 const WForm = () => {
   const [page, setPage] = useState(0)
 
-  const [formData, setFormData] = useState({
-
-    userName: '',
-    password: '',
-    codePayamak:''
-  })
-
-
-  const formTitles = ['Sign In', '', '']
-
-
-
-
-
-
-
-
+  const formTitles = ['Sign In', 'Verify', '']
 
 //  for showing pages
   const pageInfo = () => {
     if (page === 0) {
-      return <User  page={page} setPage={setPage} formData={formData} setFormData={setFormData}/>
+      return <User  page={page} setPage={setPage}   />
     }
     else if (page === 1) {
-      return <PCode formData={formData} setFormData={setFormData} setPage={setPage} />
+      return <PCode    setPage={setPage} />
     }
     else{
       return <Other />
@@ -45,34 +29,13 @@ const WForm = () => {
   }
 
 
-// const submitForm = (e) => {
-//     e.preventDefault();
-
-//     // if (formData.userName.length == 0 || formData.password.length == 0) {
-//     //   setErrors(true)
-//     // }
-
-//     const data = {
-//       userName: formData.userName,
-//       passsword:formData.passsword
-
-//     }
-//     console.log(data);
-//     setFormData('')
-
-
-
-
-//   }
-
-
   return (
     <Container>
       <Row>
-        <Col xs={2} md={2}  xl={4}></Col>
+        <Col   md={2}  xl={4}></Col>
 
-        <Col className='back' xs={12} md={8} xl={4}  >
-          <div className='p-1 text-center'>
+        <Col className='back' xs={10} md={8} xl={4}  >
+          <div className='p-1 mt-3'>
             <Row>
             <Col xs={12} md={8} xl={6} className='progressBar mt-3 mb-4'
             style={{
@@ -86,13 +49,17 @@ const WForm = () => {
 
           <Row>
             <Card>
-              <div>
+              <Col xs={12} md={12} lg={12}>
                 {/* header */}
-                <header className='text-center mt-2'>
+                <header className='text-center mt-4'>
                   {formTitles[page]}
                 </header>
                 {/* main page and forms */}
-                <form >{pageInfo()}</form>
+                  <Row>
+                    <Col className='form' xs={12} md={12} lg={12}>
+                       {pageInfo()}
+                    </Col>
+                </Row>
 
                 {/* buttons */}
                {/* <footer className='m-5 text-center'>
@@ -113,19 +80,14 @@ const WForm = () => {
                     {/* </Col>
                   </Row> */}
               {/* </footer> */}
-             </div>
+             </Col>
             </Card>
           </Row>
           </div>
         </Col>
 
-        <Col xs={2} md={2} xl={4}></Col>
+        <Col   md={2} xl={4}></Col>
       </Row>
-
-
-
-
-
     </Container>
   )
 }
