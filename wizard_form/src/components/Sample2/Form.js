@@ -1,30 +1,28 @@
-import React, { useState } from 'react'
+import React,{useState} from 'react'
 import Card from '../UI/Card'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Container } from 'react-bootstrap';
-import PCode from './PCode';
-import User from './User';
-import Other from './Other';
+import Part1 from './Part1';
+import Part2 from './Part2';
+import Part3 from './Part3'
 
+const Form = () => {
 
-
-
-const WForm = () => {
-  const [page, setPage] = useState(0)
+const [page, setPage] = useState(0)
 
   const formTitles = ['Sign In', 'Verify', '']
 
 //  for showing pages
   const pageInfo = () => {
     if (page === 0) {
-      return <User page={page} setPage={setPage}   />
+      return <Part1  page={page} setPage={setPage}   />
     }
     else if (page === 1) {
-      return <PCode setPage={setPage} />
+      return <Part2  setPage={setPage} />
     }
     else{
-      return <Other setPage={setPage}/>
+      return <Part3 setPage={setPage}/>
     }
   }
 
@@ -60,26 +58,6 @@ const WForm = () => {
                        {pageInfo()}
                     </Col>
                 </Row>
-
-                {/* buttons */}
-               {/* <footer className='m-5 text-center'>
-                  <Row>
-                   <Col xs={12} md={6} xl={6}>
-                    {/* <button className='btn btn-primary mb-3' onClick={prevHandler}
-                        style={{ display: page === 0 ? 'none' : page == 1 ? 'block' : 'none' ,width:'100%'}}> Prev</button> */}
-                    {/* </Col> */}
-
-                   {/* <Col xs={12} md={6} xl={6}> */}
-                      {/* <button
-                        className='btn btn-success mb-3' disabled={page == formTitles.length - 1}
-                     style={{display: page === 2 ? 'none' : page == 0 ? 'inline-block' : 'Submit',width:'100%'}}
-                     onClick={nextHandler}>
-                     {page === formTitles.length - 2 ? 'Submit' : 'Next'}
-
-                    </button> */}
-                    {/* </Col>
-                  </Row> */}
-              {/* </footer> */}
              </Col>
             </Card>
           </Row>
@@ -89,10 +67,6 @@ const WForm = () => {
         <Col   md={2} xl={4}></Col>
       </Row>
     </Container>
-  )
-}
+  )}
 
-export default WForm
-
-
-
+export default Form

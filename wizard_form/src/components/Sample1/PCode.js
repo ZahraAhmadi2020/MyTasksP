@@ -99,7 +99,7 @@ const PCode = ({ setPage}) => {
         </Col>
         <Col xs={12} md={6} lg={6}>
           <button
-            disabled={!codeSum}
+            // disabled={!codeSum}
             className='btn btn-success w-100' onClick={(e) => {
             e.preventDefault()
             // alert('Form submitted')
