@@ -1,29 +1,31 @@
-import React, { useState } from 'react'
-import Row from 'react-bootstrap/Row';
+import React from 'react';
 import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+import useInput from '../../hooks/use-input';
 
 const Part2= ({setPage}) => {
-   const[payamakCode,setPayamakCode]=useState('')
-  const [codeValid, setCodeValid] = useState('0945')
-  const[codeSum,setCodeSub]=useState(false)
-  // const[errorCode,setErroeCode]=useState('')
 
+  const {
+    value: code,
+    isValid: codeIsValid,
+    hasError: codeHasError,
+    valueChangeHandler: codeChangeHandler,
+    inputBlurHandler: codeBlurHandler,
+    reset:codeReset
+   }=useInput(value=> value !== '' && value.length >= 4)
 
-  var PCode = '2255'
-  const pCodeChangeHandler = (e) => {
-    setPayamakCode(e.target.value)
-    setCodeSub(e.target.value.includes(PCode) && payamakCode.trim().length > 2)
-
-
+  let formIsValid = false;
+  if (codeIsValid) {
+    formIsValid=true
   }
+  // var PCode = '2255'
 
-  const codeValidate = () => {
-      setCodeValid(payamakCode.trim().length >3 )
-  }
+
+
   const nextSubHandler = (e) => {
     e.preventDefault()
     setPage((currPage) => currPage + 1)
-    console.log(payamakCode);
+    console.log(code);
   }
   const prev = (e) => {
     e.preventDefault()
@@ -31,23 +33,21 @@ const Part2= ({setPage}) => {
   }
   const submitCode = (e) => {
     e.preventDefault()
-    setPayamakCode('')
-    // console.log(payamakCode);
-    const dataCode={payamakCode:payamakCode}
-    console.log(dataCode);
+     codeReset()
+
   }
   return (
     <form className='codeP m-4 pt-4' onSubmit={submitCode}>
       <Row>
         <Col>
           <input className='codeInput' maxLength='4' required size="10"
-            onBlur={codeValidate}
-            style={{ color: codeValid === false ? 'red' : ' blue' }}
-            onChange={pCodeChangeHandler}
-            value={payamakCode}
+            onBlur={codeBlurHandler}
+            style={{ color: codeIsValid === false ? 'red' : ' blue' }}
+            onChange={codeChangeHandler}
+            value={code}
           />
 
-          {codeValid === false ? <p className='text-danger'>wrong number</p> :''}
+          {codeIsValid === false ? <p className='text-danger'>wrong number</p> :''}
          </Col>
       </Row>
       <Row className='text-center mt-5 '>
@@ -57,7 +57,7 @@ const Part2= ({setPage}) => {
         </Col>
         <Col xs={12} md={6} lg={6}>
           <button
-            disabled={!codeSum}
+            disabled={!formIsValid}
             className='btn btn-success w-100'
             onClick={nextSubHandler} >Submit</button>
         </Col>
