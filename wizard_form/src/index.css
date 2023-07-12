@@ -91,3 +91,8 @@ body {
   outline: none;
   color: dodgerblue;
 }
+.next{
+  cursor: not-allowed;
+
+}
+

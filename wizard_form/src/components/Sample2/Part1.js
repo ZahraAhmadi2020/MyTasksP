@@ -1,54 +1,45 @@
-import React,{useState} from 'react'
-
-import Row from 'react-bootstrap/Row';
+import $ from 'jquery';
+import React from 'react';
 import Col from 'react-bootstrap/Col';
-import {HiEye} from 'react-icons/hi'
-import $ from 'jquery'
+import Row from 'react-bootstrap/Row';
+import { HiEye } from 'react-icons/hi';
+import useInput from '../../hooks/use-input';
 
 
-
+const lowerCaseLetters = /[a-z]/g;
+const upperCaseLetters = /[A-Z]/g;
+const  numbers = /[0-9]/g;
 const Part1 = ({ setPage }) => {
-  const [userName, setUserName] = useState('')
-  const [password, setPassword] = useState('')
-  const [errorMessageUserName, setErrorMessageUserName] = useState('');
-  const [errorMessagePass, setErrorMessagePass] = useState('');
-  const [formIsValid, setFormIsValid] = useState(false);
 
-  var upperCase = /[A-Z]/g;
-  var numbers = /[0-9]/g;
-  var name ="Zahra_Ahmadi"
-  var pass = '002zahrA021'
+  const {
+    value: username,
+    isValid: usernameIsValid,
+    hasError: usernameHasError,
+    valueChangeHandler: usernameChangeHandler,
+    inputBlurHandler: usernameBlurHandler,
+    reset:usernameReset
 
-  const userNameChangeHandler = (e) => {
-    setUserName(e.target.value)
-     setFormIsValid(
-      e.target.value.includes(name) && password.trim().length > 8
-    );
-    if (userName.length < 5 || !userName.match(upperCase)) {
-      setErrorMessageUserName(`${' نام کاربری باید بیشتر از ۵ حرف باشد.'}${'نوشتن حروف بزرگ الزامیست .'}`)
+  } = useInput(value => value !== '' && value.length > 5 )
 
-    }
-    else {
-      setErrorMessageUserName('')
-    }
+  const {
+    value: password,
+    isValid: passwordIsValid,
+    hasError: passwordHasError,
+    valueChangeHandler: passwordChangeHandler,
+    inputBlurHandler: passwordBlurHandler,
+    reset: passwordReset
 
+  } = useInput(value => value !== '' && value.length > 8 && value.match(lowerCaseLetters) && value.match(upperCaseLetters) && value.match(numbers));
+
+  let formIsValid = false;
+  if (usernameIsValid && passwordIsValid) {
+    formIsValid=true
   }
 
-  const passwordChangeHandler = (e) => {
-    setPassword(e.target.value)
-    setFormIsValid(
-      e.target.value.trim().length > 8 && userName.includes(pass)
-      // e.target.value.includes(pass) && password.trim().length > 8
-     );
 
-    if (!password.match(upperCase) || !password.match(numbers) || password.length < 8) {
-      setErrorMessagePass(`${'نوشتن حروف بزرگ الزامیست .'}${'باید عدد هم وارد کنید .'}${'رمز عبور باید بیشتر از ۸ حرف باشد .'}`)
-    }
-    else {
-      setErrorMessagePass('')
-    }
 
-  }
+
+
 
 // show password
     var passField = $('input[type=password]');
@@ -61,31 +52,36 @@ const Part1 = ({ setPage }) => {
   })
 
 
-  const nextHandler = (e) => {
-    e.preventDefault()
-    setPage((currPage) => currPage + 1)
-    console.log(userName);
-    console.log(password);
-  }
 
-  const next = () => {
-    if (userName.length === 0 || password.length === 0) {
-      alert('نام کاربری و رمز عبور را وارد کنید .')
-    }
-    else {
-      return;
-    }
-  }
+const nextHandler= async(e) => {
+   e.preventDefault()
+    setPage((currPage) => currPage + 1)
+    console.log(username);
+    console.log(password);
+  const response =await fetch('https://mywizardform-default-rtdb.firebaseio.com/value.json', {
+      method: 'POST',
+      body: JSON.stringify({username,password, title: 'Send data' }),
+      headers: {
+        'Content-Type':'application/json'
+      }
+    })
+    const data =await response.json()
+      console.log(data);
+
+}
+
 
   const submit = (e) => {
     e.preventDefault()
-    const data = {
-      userName: userName,
-      password:password
+
+    if (!usernameIsValid && !passwordIsValid) {
+      return;
     }
-    setPassword('')
-    setUserName('')
-    console.log(data);
+    console.log(username, password);
+
+    usernameReset()
+    passwordReset()
+
 
   }
 
@@ -93,30 +89,37 @@ const Part1 = ({ setPage }) => {
     <form className='m-4 pt-3' dir='rtl' onSubmit={submit} >
       <Row className='mt-3 h-100'>
 
-        <Col xs={12} md={12} lg={12} className='inputCol'>
+        <Col xs={12} md={12} lg={12} className='inputCol'
+          style={{ border: usernameHasError ? '2px solid red' : '' }}>
           <label className="label1 text-muted">نام کاربری</label>
-          <Row>
+          <Row >
             <Col xs={4} md={8} lg={12}  >
               <input
                 key='username'
                 id='userName'
                 type='text' className="input border-0 mt-n3 m-2 p-1"
-                value={userName} name='userName'
-                onChange={userNameChangeHandler}
-                // onBlur={validateUserName}
+                value={username} name='userName'
+                onChange={usernameChangeHandler}
+                onBlur={usernameBlurHandler}
                 minLength='5'
                 maxLength='13'
-          />
-           </Col>
-        </Row>
-        </Col>
 
-        <div className='mt-1'
-          style={{ color: "red" }}>{errorMessageUserName}
-        </div>
+              />
+
+            </Col>
+
+          </Row>
+
+        </Col>
+        {usernameHasError &&
+              (<p className='text-danger'> نام کاربری باید بیشتر از ۵ رقم باشد.</p>
+              )}
+
+
       </Row>
       <Row className='mt-4 ' >
-        <Col className='inputCol'>
+        <Col className='inputCol'
+          style={{ border: passwordHasError ? '2px solid red' : '' }}>
           <label className="label2 text-muted"> رمز عبور</label>
           <Row>
               <Col xs={4} md={8} lg={12}>
@@ -126,22 +129,26 @@ const Part1 = ({ setPage }) => {
                type='password'
                 className="border-0 input mt-n3 p-1 m-2"
                 value={password}
-                 onChange={passwordChangeHandler}
+                onChange={passwordChangeHandler}
+                onBlur={passwordBlurHandler}
                 maxLength='15'
                 minLength='8'
+
                />
              </Col>
               <Col xs={2} md={2} lg={3}>
                   <span className='showE show-pass'><HiEye/></span>
                 </Col>
                </Row>
-            </Col>
-             <div style = {{ color: "red" }}> {errorMessagePass} </div>
+        </Col>
+          {passwordHasError &&
+              (<p className='text-danger'> رمز عبور باید بیشتر از ۸ رقم بوده و شامل حروف کوچک و بزرگ باشد.</p>)}
+             {/* <div style = {{ color: "red" }}> {errorMessagePass} </div> */}
       </Row>
       <Row className='text-center  mt-4 '>
         <Col></Col>
         <Col xs={12} md={8} lg={6}
-          onMouseEnter={next}
+          // onMouseEnter={next}
         >
           <button
             type='submit'
